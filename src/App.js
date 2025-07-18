@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./styles/Leaderboard.css";
 
+const API_BASE = "https://leadboard-ranking-1.onrender.com/api";
+
 function App() {
   const [leaderboardUsers, setLeaderboardUsers] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState("");
@@ -12,14 +14,14 @@ function App() {
 
   const fetchLeaderboard = () => {
     axios
-      .get("http://localhost:8000/api/leaderboard")
+      .get(`${API_BASE}/leaderboard`)
       .then((res) => setLeaderboardUsers(res.data))
       .catch((err) => console.error("Leaderboard fetch error:", err.message));
   };
 
   const fetchHistory = () => {
     axios
-      .get("http://localhost:8000/api/history")
+      .get(`${API_BASE}/history`)
       .then((res) => setHistoryLogs(res.data))
       .catch((err) => console.error("History fetch error:", err.message));
   };
@@ -32,7 +34,7 @@ function App() {
   const handleClaim = () => {
     if (!selectedUserId) return;
     axios
-      .post(`http://localhost:8000/api/claim/${selectedUserId}`)
+      .post(`${API_BASE}/claim/${selectedUserId}`)
       .then((res) => {
         setClaimedPoints({
           name: res.data.user.name,
@@ -47,7 +49,7 @@ function App() {
   const handleAddUser = () => {
     if (!newUserName.trim()) return;
     axios
-      .post("http://localhost:8000/api/users", { name: newUserName })
+      .post(`${API_BASE}/users`, { name: newUserName })
       .then(() => {
         setNewUserName("");
         fetchLeaderboard();
@@ -92,7 +94,6 @@ function App() {
         </div>
       </div>
 
-      {}
       {claimedPoints && (
         <div className="claim-feedback">
           <div className="avatar-wrapper">
@@ -102,7 +103,6 @@ function App() {
         </div>
       )}
 
-      {}
       <div className="top-three">
         {leaderboardUsers.slice(0, 3).map((user, index) => (
           <div className={`medal-card medal-${index + 1}`} key={user._id}>
@@ -116,7 +116,6 @@ function App() {
         ))}
       </div>
 
-      {/* Remaining leaderboard */}
       {leaderboardUsers.length <= 3 ? (
         <p className="no-users">😢 No players beyond top 3</p>
       ) : (
@@ -138,7 +137,6 @@ function App() {
         </ol>
       )}
 
-      {}
       <button
         className="history-btn"
         onClick={() => setShowHistory(!showHistory)}
@@ -146,7 +144,6 @@ function App() {
         📜 {showHistory ? "Hide" : "View"} Claim History
       </button>
 
-      {}
       {showHistory && (
         <div className="history-section">
           <h2>📜 Claim History Log</h2>
